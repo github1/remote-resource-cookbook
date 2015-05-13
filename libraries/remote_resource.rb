@@ -153,10 +153,10 @@ class Chef
         end
       end
       @remote_resource_inst.required_gems.each do |name, version|
-        chef_gem name do
+        c = chef_gem name do
           version version
-          compile_time true
         end
+        c.compile_time(true) if c.respond_to?(:compile_time)
       end
     end
 
