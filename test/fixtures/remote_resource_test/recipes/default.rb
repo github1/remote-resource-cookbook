@@ -2,7 +2,7 @@ ENV['AWS_ACCESS_KEY_ID']=node['aws_access_key_id']
 ENV['AWS_SECRET_ACCESS_KEY']=node['aws_secret_access_key']
 
 remote_resource "/mys3resource.zip" do
-  source 's3://s3.amazonaws.com/fisolutions.latest/ffs-client.zip'
+  source 's3://s3.amazonaws.com/chef.remote-resource-cookbook/test_file'
   notifies :create, "file[/myfile_for_s3]"
 end
 
