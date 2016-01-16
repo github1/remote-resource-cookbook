@@ -1,5 +1,5 @@
 # remote-resource-cookbook
-Chef cookbook providing remote-resource LWRP
+Chef cookbook providing remote_resource resource
 
 # usage
   
