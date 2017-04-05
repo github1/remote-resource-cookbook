@@ -1,3 +1,4 @@
+ENV['AWS_REGION']=node['aws_region']
 ENV['AWS_ACCESS_KEY_ID']=node['aws_access_key_id']
 ENV['AWS_SECRET_ACCESS_KEY']=node['aws_secret_access_key']
 
@@ -20,7 +21,7 @@ end
 (1..2).each do |n|
   remote_resource "/myhttpresource.jpg #{n}" do
     path '/myhttpresource.jpg'
-    source 'https://i.ytimg.com/vi/oM1EVAYahFE/maxresdefault.jpg'
+    source 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_120x44dp.png'
     notifies :create, "file[/myfile_for_http_#{n}]"
   end
 end

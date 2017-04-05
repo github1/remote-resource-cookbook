@@ -38,12 +38,12 @@ class Chef
 
       def download
         require 'aws-sdk'
-        AWS.config(:s3 => {:endpoint => @s3_endpoint})
-        object = get_s3_object(@bucket_name, @object_name)
+        s3_client = Aws::S3::Client.new
+        object = s3_client.get_object(bucket: @bucket_name, key: @object_name)
         object_checksum = Digest::MD5.hexdigest(object.last_modified.to_s)
         unless ::File.exists?(@path) && read_cached_checksum == object_checksum
           ::File.open(@path, 'wb') do |file|
-            object.read do |chunk|
+            object.body.read do |chunk|
               file.write(chunk)
             end
           end
@@ -55,15 +55,6 @@ class Chef
 
       def required_gems
         {'aws-sdk' => '2.9.3'}
-      end
-
-      def get_s3_object(bucket_name, object_name)
-        s3_client = AWS::S3.new()
-        bucket = s3_client.buckets[bucket_name]
-        raise S3BucketNotFoundError.new(bucket_name) unless bucket.exists?
-        object = bucket.objects[object_name]
-        raise S3ArtifactNotFoundError.new(bucket_name, object_name) unless object.exists?
-        object
       end
 
       def cached_checksum
