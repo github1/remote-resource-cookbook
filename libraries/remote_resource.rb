@@ -54,7 +54,7 @@ class Chef
       end
 
       def required_gems
-        {'aws-sdk' => '1.29.0'}
+        {'aws-sdk' => '2.9.3'}
       end
 
       def get_s3_object(bucket_name, object_name)
