@@ -41,9 +41,9 @@ class Chef
         s3_client = Aws::S3::Client.new
         object = s3_client.get_object(bucket: @bucket_name, key: @object_name)
         object_checksum = Digest::MD5.hexdigest(object.last_modified.to_s)
-        unless ::File.exists?(@path) && read_cached_checksum == object_checksum
+        if !::File.exists?(@path) || read_cached_checksum != object_checksum
           ::File.open(@path, 'wb') do |file|
-            object.body.read do |chunk|
+            s3_client.get_object(bucket: @bucket_name, key: @object_name) do |chunk|
               file.write(chunk)
             end
           end

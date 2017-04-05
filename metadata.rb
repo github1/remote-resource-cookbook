@@ -4,5 +4,5 @@ maintainer_email 'github1@github.com'
 license          'All rights reserved'
 description      'Provides remote_resource resource'
 long_description 'Provides remote_resource resource'
-version          '0.4.0'
+version          '1.0.0'
 

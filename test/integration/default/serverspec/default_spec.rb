@@ -1,7 +1,8 @@
 require 'spec_helper'
 
-describe file('/mys3resource.zip') do
+describe file('/aws_s3_test_file') do
   it { should be_file }
+  its(:size) { should > 0 }
 end
 
 describe file('/myfile_for_s3_1') do
@@ -12,8 +13,9 @@ describe file('/myfile_for_s3_2') do
   it { should_not exist }
 end
 
-describe file('/myhttpresource.jpg') do
+describe file('/http_test_file') do
   it { should be_file }
+  its(:size) { should > 0 }
 end
 
 describe file('/myfile_for_http_1') do
