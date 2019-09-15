@@ -11,7 +11,7 @@ module RemoteResource
         raise InvalidS3SourceURL
       end
       @bucket_name = host_part
-      @s3_endpoint = 's3.amazon.com'
+      @s3_endpoint = 's3.amazonaws.com'
       @object_name = path_part.gsub(/^\//, '')
       @dlcheck_source = "s3://#{@s3_endpoint}/#{@bucket_name}/#{@object_name}"
       @cache_path = context.cache_path
@@ -21,10 +21,10 @@ module RemoteResource
 
     def download(context)
       self.prepare(context)
-      object = s3_client.get_object(bucket: @bucket_name, key: @object_name)
+      object = s3_object(@bucket_name, @object_name)
       object_last_modified_hash = create_dlcheck_from_object object
       if !context.is_present? || read_cached_dlcheck != object_last_modified_hash
-        write_object @bucket_name, @object_name, context.path
+        write_object object, context.path
         write_dlcheck object_last_modified_hash
         true
       else
@@ -32,13 +32,14 @@ module RemoteResource
       end
     end
 
-    def s3_client
+    def s3_object(bucket_name, object_name)
       require 'aws-sdk'
-      Aws::S3::Client.new
+      Aws::S3::Object.new(bucket_name: bucket_name,
+                          key: object_name)
     end
 
     def create_dlcheck_from_object(object)
-      Digest::MD5.hexdigest(object.last_modified.to_s)
+      Digest::MD5.hexdigest(object.data.last_modified.to_s)
     end
 
     def cached_dlcheck
@@ -56,12 +57,8 @@ module RemoteResource
       ::File.open(cached_dlcheck, 'w') { |file| file.puts dlcheck_data }
     end
 
-    def write_object(bucket_name, object_name, path)
-      ::File.open(path, 'wb') do |file|
-        s3_client.get_object(bucket: bucket_name, key: object_name) do |chunk|
-          file.write(chunk)
-        end
-      end
+    def write_object(object, path)
+      object.download_file path
     end
   end
 end

@@ -13,9 +13,6 @@ describe 'RemoteResource::S3RemoteResource' do
     RemoteResource::S3RemoteResource
         .new
   }
-  let(:s3_client) {
-    double('s3_client')
-  }
   let(:s3_object) {
     double('s3_object')
   }
@@ -33,8 +30,8 @@ describe 'RemoteResource::S3RemoteResource' do
       res.prepare(context)
       expect(res.bucket_name).to eq 'thebucket'
       expect(res.object_name).to eq 'theobject'
-      expect(res.s3_endpoint).to eq 's3.amazon.com'
-      expect(res.dlcheck_source).to eq 's3://s3.amazon.com/thebucket/theobject'
+      expect(res.s3_endpoint).to eq 's3.amazonaws.com'
+      expect(res.dlcheck_source).to eq 's3://s3.amazonaws.com/thebucket/theobject'
     end
     it 'handles dots in the bucketname' do
       allow(context)
@@ -42,7 +39,7 @@ describe 'RemoteResource::S3RemoteResource' do
       res.prepare(context)
       expect(res.bucket_name).to eq 'thebucket.files'
       expect(res.object_name).to eq 'theobject'
-      expect(res.dlcheck_source).to eq 's3://s3.amazon.com/thebucket.files/theobject'
+      expect(res.dlcheck_source).to eq 's3://s3.amazonaws.com/thebucket.files/theobject'
     end
     it 'installs the aws-sdk gem' do
       allow(context)
@@ -60,9 +57,7 @@ describe 'RemoteResource::S3RemoteResource' do
       allow(res)
           .to receive(:write_dlcheck).and_return(true)
       allow(res)
-          .to receive(:s3_client).and_return(s3_client)
-      allow(s3_client)
-          .to receive(:get_object).and_return(s3_object)
+          .to receive(:s3_object).and_return(s3_object)
       allow(context)
           .to receive(:is_present?)
                   .and_return(true)
@@ -86,7 +81,7 @@ describe 'RemoteResource::S3RemoteResource' do
             .to receive(:path).and_return('/some/path')
         expect(res.download(context)).to be(true)
         expect(res).to have_received(:write_object)
-                           .with('thebucket', 'theobject', '/some/path')
+                           .with(s3_object, '/some/path')
       end
     end
   end
