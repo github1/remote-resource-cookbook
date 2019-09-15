@@ -17,7 +17,7 @@ end
 (1..2).each do |n|
   remote_resource "/aws_s3_test_file #{n}" do
     path '/aws_s3_test_file'
-    source 's3://s3.amazonaws.com/chef.remote-resource-cookbook/test_file'
+    source 's3://chef.remote-resource-cookbook/test_file'
     notifies :create, "file[/myfile_for_s3_#{n}]"
   end
 end

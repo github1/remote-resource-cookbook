@@ -4,9 +4,14 @@ driver:
 
 provisioner:
   name: chef_zero
+  chef_license: accept
 
 platforms:
-  - name: centos-6.5
+  - name: centos/7
+
+<%
+  access_key = `cat ~/.aws/credentials | grep default -A2 | tail -n2 | awk '{print $3}' | tr '\n' ' '`.split(' ')
+%>
 
 suites:
   - name: default
@@ -14,5 +19,5 @@ suites:
       - recipe[remote_resource::_remote_resource_integration_fixture]
     attributes:
       aws_region: 'us-east-1'
-      aws_access_key_id: "<%= ENV['AWS_ACCESS_KEY_ID'] %>"
-      aws_secret_access_key: "<%= ENV['AWS_SECRET_ACCESS_KEY'] %>"
+      aws_access_key_id: "<%= access_key[0] %>"
+      aws_secret_access_key: "<%= access_key[1] %>"

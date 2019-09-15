@@ -1,4 +1,4 @@
-require 'spec_helper'
+require_relative './spec_helper'
 
 describe file('/aws_s3_test_file') do
   it { should be_file }

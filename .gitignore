@@ -1,10 +1,6 @@
-Gemfile.lock
-Berksfile.lock
 .vagrant
 .bundle/
 tmp/
-.vagrant
 .kitchen/
-.project
 .idea
 *.iml
