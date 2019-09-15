@@ -1,10 +1,12 @@
-require_relative '../../../../libraries/scheme/s3.rb'
+require_relative '../../../libraries/s3.rb'
 
 describe 'RemoteResource::S3RemoteResource' do
   let(:context) {
     c = double('context')
     allow(c)
         .to receive(:install_gem).and_return(true)
+    allow(c)
+        .to receive(:cache_path).and_return('/the/cache')
     c
   }
   let(:res) {

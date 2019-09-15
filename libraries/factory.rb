@@ -1,4 +1,5 @@
-require_relative './scheme/s3'
+require_relative './s3'
+require_relative './http'
 module RemoteResource
   class Factory
     class UnsupportedScheme < StandardError
