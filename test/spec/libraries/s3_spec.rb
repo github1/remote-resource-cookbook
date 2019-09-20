@@ -7,6 +7,14 @@ describe 'RemoteResource::S3RemoteResource' do
         .to receive(:install_gem).and_return(true)
     allow(c)
         .to receive(:cache_path).and_return('/the/cache')
+    allow(c)
+        .to receive(:is_present_in_cache?)
+                .and_return(false)
+    allow(c)
+        .to receive(:copy_from_cache)
+    allow(c)
+        .to receive(:cached_file)
+                .and_return('/some/cached/file')
     c
   }
   let(:res) {
@@ -81,7 +89,8 @@ describe 'RemoteResource::S3RemoteResource' do
             .to receive(:path).and_return('/some/path')
         expect(res.download(context)).to be(true)
         expect(res).to have_received(:write_object)
-                           .with(s3_object, '/some/path')
+                           .with(s3_object, '/some/cached/file')
+        expect(context).to have_received(:copy_from_cache)
       end
     end
   end

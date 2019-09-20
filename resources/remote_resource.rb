@@ -15,14 +15,13 @@ class Chef
       cache_path = ::File.join(Config[:file_cache_path], 'remote_resource')
       create_path cache_path
       path = new_resource.path || new_resource.remote_resource_name
-      did_download = ::RemoteResource::Helper.download(
-          ::RemoteResource::Context.new(
-              new_resource.source,
-              path,
-              cache_path,
-              run_context
-          )
+      res_context = ::RemoteResource::Context.new(
+          new_resource.source,
+          path,
+          cache_path,
+          run_context
       )
+      did_download = ::RemoteResource::Helper.download(res_context)
       new_resource.updated_by_last_action(did_download)
     end
 

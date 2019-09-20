@@ -23,9 +23,13 @@ module RemoteResource
       self.prepare(context)
       object = s3_object(@bucket_name, @object_name)
       object_last_modified_hash = create_dlcheck_from_object object
-      if !context.is_present? || read_cached_dlcheck != object_last_modified_hash
-        write_object object, context.path
+      remote_changed = read_cached_dlcheck != object_last_modified_hash
+      if !context.is_present_in_cache? || remote_changed
+        write_object object, context.cached_file
         write_dlcheck object_last_modified_hash
+      end
+      if !context.is_present? || remote_changed
+        context.copy_from_cache
         true
       else
         false
