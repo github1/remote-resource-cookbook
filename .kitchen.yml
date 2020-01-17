@@ -1,18 +1,15 @@
+<%
+access_key = `cat ~/.aws/credentials | grep default -A2 | tail -n2 | awk '{print $3}' | tr '\n' ' '`.split(' ')
+%>
 ---
 driver:
-  name: vagrant
-
-provisioner:
-  name: chef_zero
-  chef_license: accept
-  log_level: debug
+  name: docker
 
 platforms:
-  - name: centos/7
-
-<%
-  access_key = `cat ~/.aws/credentials | grep default -A2 | tail -n2 | awk '{print $3}' | tr '\n' ' '`.split(' ')
-%>
+  - name: centos
+    driver_config:
+      image: centos
+      platform: rhel
 
 suites:
   - name: default

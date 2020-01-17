@@ -7,5 +7,5 @@ gem 'test-kitchen', '~> 1.0'
 gem 'ohai', '14.14.0'
 
 group :integration do
-  gem 'kitchen-vagrant', '~> 0.11'
+  gem 'kitchen-docker', '2.8.0'
 end
