@@ -53,7 +53,7 @@ describe 'RemoteResource::S3RemoteResource' do
       allow(context)
           .to receive(:source).and_return('s3://thebucket.files/theobject')
       res.prepare(context)
-      expect(context).to have_received(:install_gem).with('aws-sdk', '3.0.1')
+      expect(context).to have_received(:install_gem).with('aws-sdk-s3', '1.60.1')
     end
   end
   describe 'download' do

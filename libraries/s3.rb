@@ -15,7 +15,7 @@ module RemoteResource
       @object_name = path_part.gsub(/^\//, '')
       @dlcheck_source = "s3://#{@s3_endpoint}/#{@bucket_name}/#{@object_name}"
       @cache_path = context.cache_path
-      context.install_gem 'aws-sdk', '3.0.1'
+      context.install_gem 'aws-sdk-s3', '1.60.1'
       self
     end
 
@@ -37,7 +37,7 @@ module RemoteResource
     end
 
     def s3_object(bucket_name, object_name)
-      require 'aws-sdk'
+      require 'aws-sdk-s3'
       Aws::S3::Object.new(bucket_name: bucket_name,
                           key: object_name)
     end
