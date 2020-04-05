@@ -6,13 +6,13 @@ module RemoteResource
 
     attr_accessor :source, :path, :cache_path, :run_context, :cached_file, :was_downloaded
 
-    def initialize(source, path, cache_path, run_context)
+    def initialize(source, path, cache_path, run_context, unique_cache_file_name = false)
       @source = source
       @path = path
       @cache_path = cache_path
       @run_context = run_context
-      path_encoded = Digest::MD5.base64digest(source).gsub(/[^a-z0-9]+/i, '-')
-      @cached_file = ::File.join(@cache_path, "#{File.basename(URI.parse(source).path)}-#{path_encoded}")
+      cached_file_suffix = unique_cache_file_name ? "-#{Digest::MD5.base64digest(source).gsub(/[^a-z0-9]+/i, '-')}" : ""
+      @cached_file = ::File.join(@cache_path, "#{File.basename(URI.parse(source).path)}#{cached_file_suffix}")
     end
 
     def is_present?
