@@ -11,7 +11,8 @@ module RemoteResource
       @path = path
       @cache_path = cache_path
       @run_context = run_context
-      @cached_file = ::File.join(@cache_path, File.basename(URI.parse(source).path))
+      path_encoded = Digest::MD5.base64digest(source).gsub(/[^a-z0-9]+/i, '-')
+      @cached_file = ::File.join(@cache_path, "#{File.basename(URI.parse(source).path)}-#{path_encoded}")
     end
 
     def is_present?
