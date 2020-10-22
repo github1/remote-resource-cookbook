@@ -24,6 +24,9 @@ module RemoteResource
       object = s3_object(@bucket_name, @object_name)
       object_last_modified_hash = create_dlcheck_from_object object
       remote_changed = read_cached_dlcheck != object_last_modified_hash
+      context.extract_metadata.each do |key, path|
+        context.write_value_to_file path, get_metadata_from_object(object, key.to_s)
+      end
       if !context.is_present_in_cache? || remote_changed
         write_object object, context.cached_file
         write_dlcheck object_last_modified_hash
@@ -59,6 +62,10 @@ module RemoteResource
 
     def write_dlcheck(dlcheck_data)
       ::File.open(cached_dlcheck, 'w') { |file| file.puts dlcheck_data }
+    end
+
+    def get_metadata_from_object(object, key)
+      object.data.metadata[key].to_s
     end
 
     def write_object(object, path)

@@ -1,6 +1,6 @@
-ENV['AWS_REGION']=node['aws_region']
-ENV['AWS_ACCESS_KEY_ID']=node['aws_access_key_id']
-ENV['AWS_SECRET_ACCESS_KEY']=node['aws_secret_access_key']
+ENV['AWS_REGION'] = node['aws_region']
+ENV['AWS_ACCESS_KEY_ID'] = node['aws_access_key_id']
+ENV['AWS_SECRET_ACCESS_KEY'] = node['aws_secret_access_key']
 
 ::FileUtils.rm_rf('/files')
 
@@ -12,7 +12,7 @@ ENV['AWS_SECRET_ACCESS_KEY']=node['aws_secret_access_key']
     /files/myfile_for_http_2
 ).each do |name|
   # do this so files are in resource_collection for notifications
-  file "#{name}" do
+  file name do
     action :delete
   end
 end
@@ -21,6 +21,8 @@ end
   remote_resource "aws_s3_test_file #{n}" do
     path '/files/aws_s3_test_file'
     source 's3://chef.remote-resource-cookbook/test_file'
+    extract_metadata :version => '/files/aws_s3_test_file_version',
+      :something_else => '/files/aws_s3_test_file_something_else'
     notifies :create, "file[/files/myfile_for_s3_#{n}]"
   end
 end

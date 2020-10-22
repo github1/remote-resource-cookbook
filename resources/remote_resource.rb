@@ -7,6 +7,7 @@ property :remote_resource_name, String, name_property: true
 property :path, String
 property :source, String, required: true
 property :unique_cache_file_name, [TrueClass, FalseClass], default: false
+property :extract_metadata, Hash, default: {}
 
 action_class do
 end
@@ -18,6 +19,7 @@ action :create do
   res_context = ::RemoteResource::Context.new(
       new_resource.source,
       path,
+      new_resource.extract_metadata,
       cache_path,
       run_context,
       new_resource.unique_cache_file_name
